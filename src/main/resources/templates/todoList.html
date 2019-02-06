@@ -1,0 +1,74 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Ikke utsett til i morgen, det du kan utsette til i overmorgen</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<h1 th:text="${errorMessage}"></h1>
+<h2>Gjøremål</h2>
+<table>
+    <tr>
+        <th>Tekst</th>
+        <th>Kategorier</th>
+    </tr>
+    <th:block th:each="element : ${elements}">
+        <tr>
+            <td th:text="${element.textField}"></td>
+            <th:block th:each="category : ${element.category}">
+                <td th:text="${category.name}"></td>
+            </th:block>
+            <td><a th:href="@{/removeElement(id=${element.id})}">Slett gjøremål</a></td>
+        </tr>
+    </th:block>
+</table>
+
+<h2>Legg til nytt gjøremål</h2>
+<form action="#" th:action="@{/addElement}" th:object="${element}" method="post">
+    <p>Navn: <input type="text" th:field="*{textField}" /></p>
+    <p><input type="submit" value="Submit" /></p>
+</form>
+
+<h2>Kategorier</h2>
+<table>
+    <tr>
+        <th>Kategori</th>
+    </tr>
+    <th:block th:each="category : ${categories}">
+        <tr>
+            <td th:text="${category.name}"></td>
+            <td><a th:href="@{/(categoryFilterId=${category.id})}">Filtrer på denne kategorien</a></td>
+            <td><a th:href="@{/removeCategory(id=${category.id})}">Slett denne kategorien</a></td>
+        </tr>
+    </th:block>
+</table>
+<p><a th:href="@{/}">Fjern kategorifiltrering</a></p>
+
+<p>Legg til ny kategori</p>
+<form action="#" th:action="@{/addCategory}" th:object="${category}" method="post">
+    <p>Navn: <input type="text" th:field="*{name}" /></p>
+    <p><input type="submit" value="Submit" /></p>
+</form>
+
+<p>Koble sammen element med kategori</p>
+<form action="#" th:action="@{/setCategoryOnElement}" method="get">
+    <select name="elementId">
+        <option
+                th:each="element: ${elements}"
+                th:value="${element.id}"
+                th:text="${element.textField}">
+        </option>
+    </select>
+    <select name="categoryId">
+        <option
+                th:each="category: ${categories}"
+                th:value="${category.id}"
+                th:text="${category.name}">
+        </option>
+    </select>
+    <p><input type="submit" value="Submit" /></p>
+</form>
+
+
+</body>
+</html>
